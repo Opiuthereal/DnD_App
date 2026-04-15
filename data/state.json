@@ -1,0 +1,68 @@
+{
+  "map_active": null,
+  "fog_of_war": true,
+  "grille": {
+    "visible": true,
+    "nb_cases": 16,
+    "offset_x": 19,
+    "offset_y": 20
+  },
+  "tokens": [],
+  "groupes": [],
+  "maps": [
+    "carte.jpeg",
+    "clairval final.png",
+    "clairval 3.png"
+  ],
+  "token_defs": [
+    {
+      "id": "token_1776200220481",
+      "nom": "Loup",
+      "type": "ennemi",
+      "forme": "carre",
+      "image": "loup corrompu.png",
+      "offset_x": -198,
+      "offset_y": -106,
+      "zoom": 0.5,
+      "bordure": "#e94560",
+      "taille": "M"
+    },
+    {
+      "id": "token_1776283012378",
+      "nom": "j i",
+      "type": "joueur",
+      "forme": "cercle",
+      "image": "mur concept.jpeg",
+      "offset_x": -575.4999999999999,
+      "offset_y": 73.75,
+      "zoom": 0.5,
+      "bordure": "#4a90d9",
+      "taille": "M"
+    },
+    {
+      "id": "token_1776283142279",
+      "nom": "oejfoe",
+      "type": "joueur",
+      "forme": "cercle",
+      "image": "images (6).jpg",
+      "offset_x": -8.499999999999957,
+      "offset_y": 8.999999999999993,
+      "zoom": 0.5,
+      "bordure": "#91d94a",
+      "taille": "M"
+    },
+    {
+      "id": "token_1776285103970",
+      "nom": "shrak",
+      "type": "pnj",
+      "forme": "carre",
+      "image": "images (3).jpeg",
+      "offset_x": -2.624999999999936,
+      "offset_y": -2.624999999999936,
+      "zoom": 0.53,
+      "bordure": "#f0a500",
+      "taille": "S"
+    }
+  ],
+  "objets_interactifs": []
+}

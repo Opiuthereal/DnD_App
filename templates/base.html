@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <title>DnD - {% block titre %}{% endblock %}</title>
+
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+    <!-- CSS spécifique à la page -->
+    {% block style %}{% endblock %}
 </head>
 <body>
+    <!-- Contenu spécifique à la page -->
     {% block contenu %}{% endblock %}
+
+    <!-- JS partagé : connexion WebSocket -->
+    <script src="/static/js/socket_client.js"></script>
+
+    <!-- JS spécifique à la page -->
+    {% block script %}{% endblock %}
 </body>
 </html>

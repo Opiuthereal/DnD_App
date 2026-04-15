@@ -1,5 +1,99 @@
 {% extends "base.html" %}
-{% block titre %}MJ{% endblock %}
+{% block titre %}Maître du Jeu{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/static/css/mj.css">
+{% endblock %}
+
 {% block contenu %}
-    <h1>MJ - page en construction</h1>
+<div id="app-mj">
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--  PANNEAU GAUCHE — Menu MJ              -->
+    <!-- ═══════════════════════════════════════ -->
+    <aside id="panneau-mj">
+
+        <div class="panneau-header">
+            <h1>DnD — MJ</h1>
+        </div>
+
+        <!-- ── Maps ── -->
+        <section class="panneau-section">
+            <h2>Maps</h2>
+            <select id="select-map">
+                <option value="">— Choisir une map —</option>
+            </select>
+            <button id="btn-changer-map">Charger</button>
+        </section>
+
+        <!-- ── Fog of War ── -->
+        <section class="panneau-section">
+            <h2>Fog of War</h2>
+            <label class="toggle-label">
+                <input type="checkbox" id="toggle-fog" checked>
+                <span>Activé</span>
+            </label>
+        </section>
+
+        <!-- ── Jetons disponibles ── -->
+        <section class="panneau-section">
+            <h2>Jetons</h2>
+            <div id="liste-tokens-dispo">
+                <!-- Rempli dynamiquement par mj.js -->
+            </div>
+        </section>
+
+        <!-- ── Groupes ── -->
+        <section class="panneau-section">
+            <h2>Groupes</h2>
+            <select id="select-groupe">
+                <option value="">— Choisir un groupe —</option>
+            </select>
+            <button id="btn-charger-groupe">Charger</button>
+            <hr>
+            <input type="text" id="input-nom-groupe" placeholder="Nom du groupe...">
+            <button id="btn-sauver-groupe">Sauvegarder sélection</button>
+        </section>
+
+        <!-- ── Sauvegarde ── -->
+        <section class="panneau-section">
+            <h2>Session</h2>
+            <input type="text" id="input-nom-save" placeholder="Nom de la sauvegarde...">
+            <button id="btn-sauver">Sauvegarder</button>
+            <hr>
+            <label for="input-charger-save">Charger une save :</label>
+            <input type="file" id="input-charger-save" accept=".json">
+        </section>
+
+        <!-- ── Navigation ── -->
+        <section class="panneau-section">
+            <a href="/edition" target="_blank">Ouvrir Édition</a>
+            <a href="/joueur" target="_blank">Ouvrir Joueur</a>
+        </section>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--  ZONE DROITE — Canvas Map              -->
+    <!-- ═══════════════════════════════════════ -->
+    <main id="zone-map-mj">
+        <canvas id="canvas-mj"></canvas>
+
+        <!-- Tooltip nom du token au survol -->
+        <div id="tooltip-token"></div>
+
+        <!-- Menu contextuel clic droit sur token -->
+        <div id="menu-contextuel" class="hidden">
+            <ul>
+                <li id="ctx-visibilite">Masquer jeton</li>
+                <li id="ctx-supprimer">Retirer de la map</li>
+            </ul>
+        </div>
+    </main>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/mj.js"></script>
 {% endblock %}

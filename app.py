@@ -40,17 +40,17 @@ DEFAULT_STATE = {
     "groupes": [],               # groupes de jetons sauvegardés
     "maps": [],                  # liste des maps uploadées
     "token_defs": [],            # définitions des jetons créés en Édition
-    "objets_interactifs": []     # coffres / objets cliquables (bonus)
+    "objets_interactifs": []     # coffres/objets cliquables (en bonus)
 }
 
 def load_state():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, 'r', encoding='utf-8') as f:
-            contenu = f.read().strip()  # ← lit et enlève les espaces
-            if not contenu:             # ← si le fichier est vide
+            contenu = f.read().strip()  # lit et enlève les espaces
+            if not contenu:             # si le fichier est vide
                 print("Acun state enregistré")
                 return DEFAULT_STATE.copy()
-            return json.loads(contenu)  # ← sinon on parse
+            return json.loads(contenu)  # sinon on parse
     return DEFAULT_STATE.copy()
 
 def save_state(state):
@@ -88,12 +88,12 @@ def edition():
 #  Routes – API REST
 # ─────────────────────────────────────────────
 
-# ── État global ──
+# État global
 @app.route('/api/state', methods=['GET'])
 def get_state():
     return jsonify(state)
 
-# ── Upload d'une map ──
+# Upload d'une map
 @app.route('/api/upload/map', methods=['POST'])
 def upload_map():
     if 'file' not in request.files:
@@ -114,7 +114,7 @@ def upload_map():
     socketio.emit('maps_updated', {'maps': state['maps']})
     return jsonify({'success': True, 'filename': filename})
 
-# ── Upload d'un token (image brute) ──
+# Upload d'un token (image brute)
 @app.route('/api/upload/token', methods=['POST'])
 def upload_token():
     if 'file' not in request.files:
@@ -128,7 +128,7 @@ def upload_token():
     file.save(filepath)
     return jsonify({'success': True, 'filename': filename})
 
-# ── Créer / mettre à jour une définition de token ──
+# Créer/modifier une définition de token
 @app.route('/api/token_def', methods=['POST'])
 def create_token_def():
     data = request.json
@@ -141,7 +141,7 @@ def create_token_def():
     socketio.emit('token_defs_updated', {'token_defs': state['token_defs']})
     return jsonify({'success': True})
 
-# ── Supprimer une définition de token ──
+# Supprimer une définition de token
 @app.route('/api/token_def/<token_id>', methods=['DELETE'])
 def delete_token_def(token_id):
     state['token_defs'] = [t for t in state['token_defs'] if t['id'] != token_id]
@@ -149,12 +149,12 @@ def delete_token_def(token_id):
     socketio.emit('token_defs_updated', {'token_defs': state['token_defs']})
     return jsonify({'success': True})
 
-# ── Lister les maps uploadées ──
+# Lister les maps uploadées
 @app.route('/api/maps', methods=['GET'])
 def get_maps():
     return jsonify({'maps': state['maps']})
 
-# ── Sauvegarder la session (export JSON) ──
+# Sauvegarder la session en JSON
 @app.route('/api/save', methods=['POST'])
 def save_session():
     data    = request.json
@@ -164,7 +164,7 @@ def save_session():
         json.dump(state, f, ensure_ascii=False, indent=2)
     return jsonify({'success': True, 'filename': name})
 
-# ── Charger une sauvegarde ──
+# Charger une sauvegarde
 @app.route('/api/load', methods=['POST'])
 def load_session():
     global state
@@ -177,7 +177,7 @@ def load_session():
     socketio.emit('state_reloaded', state)
     return jsonify({'success': True})
 
-# ── Servir les fichiers uploadés ──
+# Servir les fichiers uploadés
 @app.route('/uploads/maps/<filename>')
 def serve_map(filename):
     return send_from_directory(UPLOAD_MAPS, filename)
@@ -200,7 +200,7 @@ def on_connect():
 def on_disconnect():
     print(f"[WS] Client déconnecté : {request.sid}")
 
-# ── Changer de map active ──
+# Changer de map active
 @socketio.on('change_map')
 def on_change_map(data):
     # data = { "map": "donjon.png" }
@@ -208,7 +208,7 @@ def on_change_map(data):
     save_state(state)
     emit('map_changed', {'map': state['map_active']}, broadcast=True)
 
-# ── Mettre à jour la grille ──
+# Mettre à jour la grille
 @socketio.on('update_grille')
 def on_update_grille(data):
     # data = { "visible": bool, "nb_cases": int, "offset_x": int, "offset_y": int }
@@ -216,7 +216,7 @@ def on_update_grille(data):
     save_state(state)
     emit('grille_updated', state['grille'], broadcast=True)
 
-# ── Activer / désactiver le fog of war ──
+# Activer/désactiver le fog of war
 @socketio.on('toggle_fog')
 def on_toggle_fog(data):
     # data = { "active": bool }
@@ -224,7 +224,7 @@ def on_toggle_fog(data):
     save_state(state)
     emit('fog_updated', {'fog_of_war': state['fog_of_war']}, broadcast=True)
 
-# ── Placer un token sur la map (depuis Édition ou MJ) ──
+# Placer un token sur la map (Ecran Édition ou MJ)
 @socketio.on('place_token')
 def on_place_token(data):
     # data = { "instance_id": str, "def_id": str, "x": float, "y": float, "visible_joueur": bool }
@@ -235,7 +235,7 @@ def on_place_token(data):
     save_state(state)
     emit('token_placed', data, broadcast=True)
 
-# ── Déplacer un token (MJ uniquement) ──
+# Déplacer un token (Ecran MJ)
 @socketio.on('move_token')
 def on_move_token(data):
     # data = { "instance_id": str, "x": float, "y": float }
@@ -246,7 +246,7 @@ def on_move_token(data):
         save_state(state)
         emit('token_moved', data, broadcast=True)
 
-# ── Supprimer un token de la map ──
+# Supprimer un token de la map
 @socketio.on('remove_token')
 def on_remove_token(data):
     # data = { "instance_id": str }
@@ -254,7 +254,7 @@ def on_remove_token(data):
     save_state(state)
     emit('token_removed', data, broadcast=True)
 
-# ── Rendre un token visible/invisible pour le joueur ──
+# Rendre un token visible/invisible pour le joueur
 @socketio.on('toggle_token_visibility')
 def on_toggle_visibility(data):
     # data = { "instance_id": str, "visible": bool }
@@ -264,7 +264,7 @@ def on_toggle_visibility(data):
         save_state(state)
         emit('token_visibility_changed', data, broadcast=True)
 
-# ── Sauvegarder un groupe de tokens ──
+# Sauvegarder un groupe de tokens
 @socketio.on('save_groupe')
 def on_save_groupe(data):
     # data = { "nom": str, "token_ids": [str, ...] }
@@ -275,7 +275,7 @@ def on_save_groupe(data):
     save_state(state)
     emit('groupes_updated', {'groupes': state['groupes']}, broadcast=True)
 
-# ── Charger un groupe (placer tous ses tokens) ──
+# Charger un groupe (placer tous ses tokens)
 @socketio.on('load_groupe')
 def on_load_groupe(data):
     # data = { "nom": str }
@@ -283,7 +283,7 @@ def on_load_groupe(data):
     if groupe:
         emit('groupe_loaded', groupe, broadcast=True)
 
-# ── Objet interactif : révéler depuis MJ → Joueur (bonus) ──
+# Objet interactif : révéler depuis MJ sur Joueur (bonus)
 @socketio.on('reveal_objet')
 def on_reveal_objet(data):
     # data = { "objet_id": str, "image": str }

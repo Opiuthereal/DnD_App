@@ -1,5 +1,31 @@
 {% extends "base.html" %}
-{% block titre %}Joueur{% endblock %}
+{% block titre %}Joueurs{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/static/css/joueur.css">
+{% endblock %}
+
 {% block contenu %}
-    <h1>Joueur - page en construction</h1>
+<div id="app-joueur">
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--  ZONE PLEIN ÉCRAN — Canvas Map         -->
+    <!-- ═══════════════════════════════════════ -->
+    <main id="zone-map-joueur">
+        <canvas id="canvas-joueur"></canvas>
+
+        <!-- Popup objet interactif (bonus) -->
+        <div id="popup-objet" class="hidden">
+            <div id="popup-objet-contenu">
+                <img id="popup-objet-image" src="" alt="Objet">
+                <button id="popup-objet-fermer">✕</button>
+            </div>
+        </div>
+    </main>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/joueur.js"></script>
 {% endblock %}
