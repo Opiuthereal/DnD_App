@@ -3,7 +3,7 @@
    Thème : sombre / fantasy
 ═══════════════════════════════════════════════ */
 
-/* ── Variables globales ── */
+/* -- Variables globales -- */
 :root {
     --bg-principal:   #1a1a2e;
     --bg-panneau:     #16213e;
@@ -41,7 +41,7 @@ body {
     height: 100vh;
 }
 
-/* ── Onglets nav ── */
+/* -- Onglets nav -- */
 #onglets-edition {
     display: flex;
     gap: 4px;
@@ -147,7 +147,7 @@ body {
     gap: 16px;
 }
 
-/* ── Carte token dans la liste ── */
+/* -- Carte token dans la liste -- */
 .token-carte {
     background: var(--bg-panneau);
     border: 1px solid var(--bordure);

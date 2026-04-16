@@ -36,8 +36,9 @@
                 <label>Afficher la grille</label>
                 <input type="checkbox" id="grille-visible" checked>
 
-                <label>Nombre de cases : <span id="val-nb-cases">20</span></label>
-                <input type="range" id="slider-nb-cases" min="5" max="50" value="20">
+                <label>Nombre de cases</label>
+                <input type="number" id="input-nb-cases" min="1" max="500" step="0.1" value="20" style="width:100%;padding:6px 10px;background:var(--bg-input);border:1px solid var(--bordure);border-radius:var(--rayon);color:var(--texte);font-size:13px;">
+                <input type="range" id="slider-nb-cases" min="5" max="100" step="0.1" value="20">
 
                 <label>Décalage X : <span id="val-offset-x">0</span>px</label>
                 <input type="range" id="slider-offset-x" min="-100" max="100" value="0">

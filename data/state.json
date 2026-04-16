@@ -3,16 +3,20 @@
   "fog_of_war": true,
   "grille": {
     "visible": true,
-    "nb_cases": 16,
-    "offset_x": 19,
-    "offset_y": 20
+    "nb_cases": 1,
+    "offset_x": -64,
+    "offset_y": 0,
+    "couleur": "#ff0000",
+    "opacite": 100
   },
   "tokens": [],
   "groupes": [],
   "maps": [
     "carte.jpeg",
     "clairval final.png",
-    "clairval 3.png"
+    "clairval 3.png",
+    "combat dans la brume de Clairval.jpg",
+    "clairval1.png"
   ],
   "token_defs": [
     {
@@ -61,6 +65,18 @@
       "offset_y": -2.624999999999936,
       "zoom": 0.53,
       "bordure": "#f0a500",
+      "taille": "S"
+    },
+    {
+      "id": "token_1776367833144",
+      "nom": "lolololo",
+      "type": "joueur",
+      "forme": "cercle",
+      "image": "Taureau_de_colchide_292.webp",
+      "offset_x": -1.2746511627908603,
+      "offset_y": -23.846046511627776,
+      "zoom": 0.59,
+      "bordure": "#34c200",
       "taille": "S"
     }
   ],

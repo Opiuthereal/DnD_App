@@ -3,9 +3,9 @@ import json
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_socketio import SocketIO, emit
 
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 #  Configuration
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 BASE_DIR        = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_MAPS     = os.path.join(BASE_DIR, 'static', 'uploads', 'maps')
 UPLOAD_TOKENS   = os.path.join(BASE_DIR, 'static', 'uploads', 'tokens')
@@ -24,9 +24,9 @@ app.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024  # 32 Mo max par upload
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 #  État global (chargé depuis state.json)
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 DEFAULT_STATE = {
     "map_active": None,          # nom du fichier de la map active
     "fog_of_war": True,          # activé par défaut
@@ -59,15 +59,15 @@ def save_state(state):
 
 state = load_state()
 
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 #  Utilitaires
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXT
 
-# ─────────────────────────────────────────────
-#  Routes – Pages principales
-# ─────────────────────────────────────────────
+# ---------------------------------------------
+#  Routes - Pages principales
+# ---------------------------------------------
 @app.route('/')
 def index():
     return render_template('mj.html')
@@ -84,9 +84,9 @@ def joueur():
 def edition():
     return render_template('edition.html')
 
-# ─────────────────────────────────────────────
-#  Routes – API REST
-# ─────────────────────────────────────────────
+# ---------------------------------------------
+#  Routes - API REST
+# ---------------------------------------------
 
 # État global
 @app.route('/api/state', methods=['GET'])
@@ -186,9 +186,9 @@ def serve_map(filename):
 def serve_token(filename):
     return send_from_directory(UPLOAD_TOKENS, filename)
 
-# ─────────────────────────────────────────────
-#  WebSocket – Événements temps réel
-# ─────────────────────────────────────────────
+# ---------------------------------------------
+#  WebSocket - Événements temps réel
+# ---------------------------------------------
 
 @socketio.on('connect')
 def on_connect():
@@ -289,9 +289,9 @@ def on_reveal_objet(data):
     # data = { "objet_id": str, "image": str }
     emit('objet_revealed', data, broadcast=True)
 
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 #  Lancement
-# ─────────────────────────────────────────────
+# ---------------------------------------------
 if __name__ == '__main__':
     print("=" * 50)
     print("  🎲 DnD App - Serveur local démarré")
