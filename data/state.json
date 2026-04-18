@@ -3,7 +3,7 @@
   "fog_of_war": true,
   "grille": {
     "visible": false,
-    "nb_cases": 30.4,
+    "nb_cases": 284.2,
     "offset_x": 79,
     "offset_y": 65,
     "couleur": "#000000",
@@ -76,6 +76,18 @@
       "zoom": 0.59,
       "bordure": "#34c200",
       "taille": "S"
+    },
+    {
+      "id": "token_1776530886705",
+      "nom": "test L",
+      "type": "ennemi",
+      "forme": "carre",
+      "image": "chat corrompu.png",
+      "offset_x": -30.440000000000055,
+      "offset_y": -24.519999999999982,
+      "zoom": 0.28,
+      "bordure": "#e94560",
+      "taille": "L"
     }
   ],
   "objets_interactifs": [],
@@ -91,12 +103,90 @@
     },
     "clairval final.png": {
       "visible": false,
-      "nb_cases": 30.4,
+      "nb_cases": 284.2,
       "offset_x": 79,
       "offset_y": 65,
       "couleur": "#000000",
       "opacite": 90,
       "exploration": false
     }
-  }
+  },
+  "presets": [
+    {
+      "id": "preset_1776530954038",
+      "nom": "préset rue test",
+      "map": "combat dans la brume de Clairval.jpg",
+      "grille": {
+        "visible": true,
+        "nb_cases": 30.4,
+        "offset_x": 79,
+        "offset_y": 65,
+        "couleur": "#000000",
+        "opacite": 90,
+        "exploration": true
+      },
+      "jetons": [
+        {
+          "defId": "token_1776530886705",
+          "x": 473.73684210526324,
+          "y": 163.6842105263158,
+          "col": 14,
+          "ligne": 4
+        },
+        {
+          "defId": "token_1776530886705",
+          "x": 309.2631578947369,
+          "y": 295.2631578947369,
+          "col": 9,
+          "ligne": 8
+        },
+        {
+          "defId": "token_1776530886705",
+          "x": 309.2631578947369,
+          "y": 97.89473684210526,
+          "col": 9,
+          "ligne": 2
+        }
+      ],
+      "formes": []
+    },
+    {
+      "id": "preset_1776531148640",
+      "nom": "Préset shrak",
+      "map": "combat dans la brume de Clairval.jpg",
+      "grille": {
+        "visible": true,
+        "nb_cases": 30.4,
+        "offset_x": 79,
+        "offset_y": 65,
+        "couleur": "#000000",
+        "opacite": 90,
+        "exploration": true
+      },
+      "jetons": [
+        {
+          "defId": "token_1776285103970",
+          "x": 506.6315789473685,
+          "y": 229.47368421052636,
+          "col": 15,
+          "ligne": 6
+        },
+        {
+          "defId": "token_1776285103970",
+          "x": 473.73684210526324,
+          "y": 196.57894736842107,
+          "col": 14,
+          "ligne": 5
+        },
+        {
+          "defId": "token_1776530886705",
+          "x": 375.0526315789474,
+          "y": 393.94736842105266,
+          "col": 11,
+          "ligne": 11
+        }
+      ],
+      "formes": []
+    }
+  ]
 }

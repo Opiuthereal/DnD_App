@@ -11,6 +11,7 @@
     <nav id="onglets-edition">
         <button class="onglet actif" data-onglet="maps">🗺️ Maps</button>
         <button class="onglet" data-onglet="tokens">🧙 Jetons</button>
+        <button class="onglet" data-onglet="presets">🗂️ Présets</button>
     </nav>
 
     <!-- ═══════════════════════════════════════ -->
@@ -60,7 +61,7 @@
                 <input type="range" id="slider-opacite" min="5" max="100" value="25">
             </section>
 
-            <!-- Autres options -->
+            <!-- Autre -->
             <section class="section-edition">
                 <h2>Autre</h2>
                 <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
@@ -68,6 +69,7 @@
                     Mode exploration (Fog of War)
                 </label>
             </section>
+
         </aside>
 
         <main id="apercu-map">
@@ -129,9 +131,80 @@
 
     </div>
 
+    <!-- ═══════════════════════════════════════ -->
+    <!--  PANNEAU : Présets                      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="panneau-presets" class="panneau-edition">
+
+        <aside id="outils-presets">
+
+            <!-- Mes Maps (lecture seule) -->
+            <section class="section-edition">
+                <h2>Mes Maps</h2>
+                <div id="preset-liste-maps">
+                    <!-- Rempli dynamiquement par preset.js -->
+                </div>
+                <button id="preset-btn-vider-map">🗑️ Vider map</button>
+            </section>
+
+            <!-- Mes Jetons -->
+            <section class="section-edition">
+                <h2>Mes Jetons</h2>
+                <div id="preset-liste-jetons">
+                    <!-- Rempli dynamiquement par preset.js -->
+                </div>
+                <div class="preset-btn-row">
+                    <button id="preset-btn-vider-jetons">🗑️ Vider jetons</button>
+                    <button id="preset-btn-vider-1-jeton">🎯 Vider 1 jeton</button>
+                </div>
+            </section>
+
+            <!-- Formes / Murs -->
+            <section class="section-edition">
+                <h2>Formes</h2>
+                <div class="preset-btn-row">
+                    <button class="preset-btn-forme" id="preset-outil-carre">⬜ Carré</button>
+                    <button class="preset-btn-forme" id="preset-outil-cercle">⭕ Cercle</button>
+                    <button class="preset-btn-forme" id="preset-outil-porte">🚪 Porte</button>
+                </div>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                    <input type="checkbox" id="preset-montrer-murs" checked>
+                    Montrer murs
+                </label>
+                <div class="preset-btn-row">
+                    <button id="preset-btn-deplacer">✋ Déplacer</button>
+                    <button id="preset-btn-suppr-forme">❌ Supprimer</button>
+                </div>
+            </section>
+
+            <!-- Enregistrer -->
+            <section class="section-edition">
+                <h2>Enregistrer</h2>
+                <input type="text" id="preset-nom" placeholder="Nom du préset...">
+                <button id="preset-btn-enregistrer">💾 Enregistrer le préset</button>
+            </section>
+
+            <!-- Mes Présets -->
+            <section class="section-edition">
+                <h2>Mes Présets</h2>
+                <div id="preset-liste-presets">
+                    <!-- Rempli dynamiquement -->
+                </div>
+            </section>
+
+        </aside>
+
+        <!-- Canvas Présets — indépendant du canvas Maps -->
+        <main id="apercu-preset">
+            <canvas id="canvas-preset"></canvas>
+        </main>
+
+    </div>
+
 </div>
 {% endblock %}
 
 {% block script %}
 <script src="/static/js/edition.js"></script>
+<script src="/static/js/preset.js"></script>
 {% endblock %}

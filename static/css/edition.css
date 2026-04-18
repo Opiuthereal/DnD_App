@@ -381,3 +381,156 @@ hr {
 ::-webkit-scrollbar-track { background: var(--bg-principal); }
 ::-webkit-scrollbar-thumb { background: var(--bordure); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ══════════════════════════════════════════════
+   PANNEAU PRÉSETS — ajouts uniquement
+══════════════════════════════════════════════ */
+#outils-presets {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--bg-panneau);
+    border-right: 2px solid var(--bordure);
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#apercu-preset {
+    flex: 1;
+    position: relative;
+    background: #0a0a1a;
+    overflow: hidden;
+}
+
+#canvas-preset {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Listes dans présets */
+#preset-liste-maps,
+#preset-liste-jetons,
+#preset-liste-presets {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* Item jeton dans la liste présets */
+.preset-jeton-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.preset-jeton-item:hover {
+    border-color: var(--accent);
+}
+
+.preset-jeton-item canvas {
+    flex-shrink: 0;
+}
+
+/* Item préset enregistré */
+.preset-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    gap: 6px;
+}
+
+.preset-item:hover {
+    border-color: var(--accent);
+}
+
+.preset-item-nom {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--texte);
+}
+
+.preset-item-suppr {
+    background: none !important;
+    border: none;
+    color: #e94560;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 0 2px;
+    flex-shrink: 0;
+    width: auto !important;
+}
+
+/* Boutons formes + actions */
+.preset-btn-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.preset-btn-row button {
+    flex: 1;
+    padding: 7px 4px;
+    font-size: 12px;
+    background: var(--bg-section);
+    color: var(--texte);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.preset-btn-row button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.preset-btn-row button.actif {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+/* Boutons outils formes (carré/cercle/porte) */
+.preset-btn-forme {
+    flex: 1;
+    padding: 7px 4px;
+    font-size: 12px;
+    background: var(--bg-section);
+    color: var(--texte);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.preset-btn-forme:hover {
+    border-color: var(--accent);
+}
+
+.preset-btn-forme.actif {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}

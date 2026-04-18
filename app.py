@@ -42,7 +42,8 @@ DEFAULT_STATE = {
     "maps": [],
     "map_configs": {},           # config grille par map  { "donjon.png": { grille... } }
     "token_defs": [],
-    "objets_interactifs": []
+    "objets_interactifs": [],
+    "presets": []              # présets enregistrés
 }
 
 def load_state():
@@ -56,6 +57,8 @@ def load_state():
             # Migration : ajouter map_configs si absent (ancien state.json)
             if 'map_configs' not in s:
                 s['map_configs'] = {}
+            if 'presets' not in s:
+                s['presets'] = []
             return s
     return DEFAULT_STATE.copy()
 
@@ -305,6 +308,35 @@ def on_load_groupe(data):
 @socketio.on('reveal_objet')
 def on_reveal_objet(data):
     emit('objet_revealed', data, broadcast=True)
+
+
+# ---------------------------------------------
+#  Routes Présets — ajouts uniquement
+# ---------------------------------------------
+
+# Enregistrer un préset
+@app.route('/api/preset', methods=['POST'])
+def save_preset():
+    data   = request.json
+    if 'presets' not in state:
+        state['presets'] = []
+    existing = next((p for p in state['presets'] if p['id'] == data['id']), None)
+    if existing:
+        state['presets'].remove(existing)
+    state['presets'].append(data)
+    save_state(state)
+    socketio.emit('presets_updated', {'presets': state['presets']})
+    return jsonify({'success': True, 'presets': state['presets']})
+
+# Supprimer un préset
+@app.route('/api/preset/<preset_id>', methods=['DELETE'])
+def delete_preset(preset_id):
+    if 'presets' not in state:
+        state['presets'] = []
+    state['presets'] = [p for p in state['presets'] if p['id'] != preset_id]
+    save_state(state)
+    socketio.emit('presets_updated', {'presets': state['presets']})
+    return jsonify({'success': True, 'presets': state['presets']})
 
 # ---------------------------------------------
 #  Lancement
