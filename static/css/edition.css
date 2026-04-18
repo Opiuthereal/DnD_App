@@ -3,7 +3,7 @@
    Thème : sombre / fantasy
 ═══════════════════════════════════════════════ */
 
-/* -- Variables globales -- */
+/* ── Variables globales ── */
 :root {
     --bg-principal:   #1a1a2e;
     --bg-panneau:     #16213e;
@@ -41,7 +41,7 @@ body {
     height: 100vh;
 }
 
-/* -- Onglets nav -- */
+/* ── Onglets nav ── */
 #onglets-edition {
     display: flex;
     gap: 4px;
@@ -147,7 +147,7 @@ body {
     gap: 16px;
 }
 
-/* -- Carte token dans la liste -- */
+/* ── Carte token dans la liste ── */
 .token-carte {
     background: var(--bg-panneau);
     border: 1px solid var(--bordure);
@@ -269,6 +269,69 @@ body {
 hr {
     border: none;
     border-top: 1px solid var(--bordure);
+}
+
+/* ══════════════════════════════════════════════
+   LISTE DES MAPS
+══════════════════════════════════════════════ */
+#liste-maps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.map-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    gap: 6px;
+}
+
+.map-item:hover { border-color: var(--accent); }
+
+.map-item.active {
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.1);
+}
+
+.map-item-nom {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--texte);
+}
+
+.map-item-config { font-size: 10px; color: #4caf50; flex-shrink: 0; }
+
+.map-item-suppr {
+    background: none !important;
+    border: none;
+    color: #e94560;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 0 2px;
+    flex-shrink: 0;
+    width: auto !important;
+}
+
+.section-edition input[type="number"] {
+    width: 100%;
+    padding: 6px 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    color: var(--texte);
+    font-size: 13px;
 }
 
 /* ══════════════════════════════════════════════

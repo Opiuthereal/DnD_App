@@ -3,22 +3,24 @@
 // ═══════════════════════════════════════════════
 
 // -- État local --
-let mapActive     = null;   // nom du fichier map affiché sur le canvas
-let tokenDefs     = [];     // jetons créés
-let grilleConfig  = { visible: true, nb_cases: 20, offset_x: 0, offset_y: 0, couleur: '#ffffff', opacite: 25 };
+let mapActive     = null;
+let mapConfigs    = {};   // { "donjon.png": { grille... } }
+let mapsDispos    = [];   // liste des noms de fichiers maps
+let tokenDefs     = [];
+let grilleConfig  = { visible: true, nb_cases: 20, offset_x: 0, offset_y: 0, couleur: '#ffffff', opacite: 25, exploration: false};
 
 // -- Recadrage token --
-let imgOffsetX = 0, imgOffsetY = 0;  // position image dans le masque
-let imgZoom    = 1;                  // zoom image
+let imgOffsetX = 0, imgOffsetY = 0;
+let imgZoom    = 1;
 let isDragging = false;
 let dragStartX = 0, dragStartY = 0;
 
-// --------------------------------------------
+// ---------------------------------------------
 //  Canvas Édition
 // ---------------------------------------------
 const canvas  = document.getElementById('canvas-edition');
 const ctx     = canvas.getContext('2d');
-let mapImage  = null;  // Image JS chargée
+let mapImage  = null;
 
 function redimensionnerCanvas() {
     const parent  = canvas.parentElement;
@@ -29,52 +31,37 @@ function redimensionnerCanvas() {
 
 function dessinerCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // -- Fond --
     ctx.fillStyle = '#0a0a1a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // -- Map --
     if (mapImage) {
-        const ratio    = Math.min(canvas.width / mapImage.width, canvas.height / mapImage.height);
-        const drawW    = mapImage.width  * ratio;
-        const drawH    = mapImage.height * ratio;
-        const drawX    = (canvas.width  - drawW) / 2;
-        const drawY    = (canvas.height - drawH) / 2;
+        const ratio = Math.min(canvas.width / mapImage.width, canvas.height / mapImage.height);
+        const drawW = mapImage.width  * ratio;
+        const drawH = mapImage.height * ratio;
+        const drawX = (canvas.width  - drawW) / 2;
+        const drawY = (canvas.height - drawH) / 2;
         ctx.drawImage(mapImage, drawX, drawY, drawW, drawH);
     }
 
-    // -- Grille --
-    if (grilleConfig.visible) {
-        dessinerGrille();
-    }
+    if (grilleConfig.visible) dessinerGrille();
 }
 
 function dessinerGrille() {
     const { nb_cases, offset_x, offset_y, couleur, opacite } = grilleConfig;
     const taille = canvas.width / nb_cases;
+    if (taille < 2) return;
 
-    // Convertir couleur hex en rgb pour appliquer l'opacité
     const r = parseInt(couleur.slice(1,3), 16);
     const g = parseInt(couleur.slice(3,5), 16);
     const b = parseInt(couleur.slice(5,7), 16);
     ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacite / 100})`;
     ctx.lineWidth   = 1;
 
-    // Lignes verticales
     for (let x = offset_x % taille; x < canvas.width; x += taille) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
     }
-
-    // Lignes horizontales
     for (let y = offset_y % taille; y < canvas.height; y += taille) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
     }
 }
 
@@ -82,7 +69,7 @@ window.addEventListener('resize', redimensionnerCanvas);
 redimensionnerCanvas();
 
 // ---------------------------------------------
-//  Onglets (Maps / Tokens)
+//  Onglets
 // ---------------------------------------------
 document.querySelectorAll('.onglet').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -109,7 +96,6 @@ document.getElementById('btn-upload-map').addEventListener('click', () => {
         .then(data => {
             if (data.success) {
                 chargerMapSurCanvas(data.filename);
-                alert(`Map "${data.filename}" uploadée !`);
             }
         });
 });
@@ -117,8 +103,89 @@ document.getElementById('btn-upload-map').addEventListener('click', () => {
 function chargerMapSurCanvas(filename) {
     mapActive = filename;
     mapImage  = new Image();
-    mapImage.onload = () => dessinerCanvas();
-    mapImage.src    = `/uploads/maps/${filename}`;
+    mapImage.onload = () => {
+        dessinerCanvas();
+        // Si une config est enregistrée pour cette map, l'appliquer
+        if (mapConfigs[filename]) {
+            appliquerConfig(mapConfigs[filename]);
+        }
+    };
+    mapImage.src = `/uploads/maps/${filename}`;
+    // Mettre à jour l'UI de la liste
+    afficherListeMaps();
+    // Informer le serveur de la map active
+    socket.emit('change_map', { map: filename });
+}
+
+function appliquerConfig(config) {
+    grilleConfig = { ...grilleConfig, ...config };
+    syncSliders();
+    dessinerCanvas();
+    socket.emit('update_grille', grilleConfig);
+}
+
+// ---------------------------------------------
+//  Liste des Maps (Mes Maps)
+// ---------------------------------------------
+function afficherListeMaps() {
+    const liste = document.getElementById('liste-maps');
+    liste.innerHTML = '';
+
+    if (!mapsDispos.length) {
+        liste.innerHTML = '<span style="font-size:11px;color:var(--texte-faible)">Aucune map uploadée</span>';
+        return;
+    }
+
+    mapsDispos.forEach(filename => {
+        const item = document.createElement('div');
+        item.className = 'map-item' + (filename === mapActive ? ' active' : '');
+
+        const aConfig = mapConfigs[filename] ? '✅' : '';
+
+        item.innerHTML = `
+            <span class="map-item-nom" title="${filename}">${filename}</span>
+            <span class="map-item-config">${aConfig}</span>
+            <button class="map-item-suppr" title="Supprimer" onclick="supprimerMap('${filename}', event)">🗑️</button>
+        `;
+
+        // Clic sur la ligne = charger la map
+        item.addEventListener('click', () => chargerMapSurCanvas(filename));
+
+        liste.appendChild(item);
+    });
+}
+
+// Enregistrer la config grille de la map active
+document.getElementById('btn-enregistrer-map').addEventListener('click', async () => {
+    if (!mapActive) return alert('Charge une map d\'abord.');
+
+    const res  = await fetch('/api/map_config', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ filename: mapActive, grille: grilleConfig })
+    });
+    const data = await res.json();
+    if (data.success) {
+        mapConfigs[mapActive] = { ...grilleConfig };
+        afficherListeMaps();
+        alert(`✅ Config enregistrée pour "${mapActive}"`);
+    }
+});
+
+async function supprimerMap(filename, e) {
+    e.stopPropagation(); // évite de charger la map en cliquant sur supprimer
+    if (!confirm(`Supprimer la map "${filename}" ?`)) return;
+
+    await fetch(`/api/map/${filename}`, { method: 'DELETE' });
+    mapsDispos = mapsDispos.filter(m => m !== filename);
+    delete mapConfigs[filename];
+
+    if (mapActive === filename) {
+        mapActive = null;
+        mapImage  = null;
+        dessinerCanvas();
+    }
+    afficherListeMaps();
 }
 
 // ---------------------------------------------
@@ -134,14 +201,14 @@ function majNbCases(val) {
     const v = parseFloat(val);
     if (isNaN(v) || v <= 0) return;
     grilleConfig.nb_cases = v;
-    document.getElementById('slider-nb-cases').value  = v;
-    document.getElementById('input-nb-cases').value   = v;
+    document.getElementById('slider-nb-cases').value = Math.min(v, 1000);
+    document.getElementById('input-nb-cases').value  = v;
     dessinerCanvas();
     socket.emit('update_grille', grilleConfig);
 }
 
 document.getElementById('slider-nb-cases').addEventListener('input', e => majNbCases(e.target.value));
-document.getElementById('input-nb-cases').addEventListener('input', e => majNbCases(e.target.value));
+document.getElementById('input-nb-cases').addEventListener('input',  e => majNbCases(e.target.value));
 
 document.getElementById('slider-offset-x').addEventListener('input', e => {
     grilleConfig.offset_x = parseInt(e.target.value);
@@ -171,14 +238,36 @@ document.getElementById('slider-opacite').addEventListener('input', e => {
 });
 
 // ---------------------------------------------
+//  Autres (Maps)
+// ---------------------------------------------
+document.getElementById('map-exploration').addEventListener('change', e => {
+    grilleConfig.exploration = e.target.checked;
+    dessinerCanvas();
+    socket.emit('update_grille', grilleConfig);
+});
+
+function syncSliders() {
+    document.getElementById('slider-nb-cases').value    = grilleConfig.nb_cases;
+    document.getElementById('input-nb-cases').value     = grilleConfig.nb_cases;
+    document.getElementById('slider-offset-x').value    = grilleConfig.offset_x;
+    document.getElementById('slider-offset-y').value    = grilleConfig.offset_y;
+    document.getElementById('val-offset-x').textContent = grilleConfig.offset_x;
+    document.getElementById('val-offset-y').textContent = grilleConfig.offset_y;
+    document.getElementById('grille-visible').checked   = grilleConfig.visible;
+    document.getElementById('grille-couleur').value     = grilleConfig.couleur  || '#ffffff';
+    document.getElementById('slider-opacite').value     = grilleConfig.opacite  || 25;
+    document.getElementById('val-opacite').textContent  = grilleConfig.opacite  || 25;
+    document.getElementById('map-exploration').checked = grilleConfig.exploration || false;
+}
+
+// ---------------------------------------------
 //  Création de Token - Recadrage style Instagram
 // ---------------------------------------------
-const masque       = document.getElementById('token-masque');
-const imgPreview   = document.getElementById('token-image-preview');
-const sliderZoom   = document.getElementById('token-zoom');
-const selectType   = document.getElementById('token-type');
+const masque     = document.getElementById('token-masque');
+const imgPreview = document.getElementById('token-image-preview');
+const sliderZoom = document.getElementById('token-zoom');
+const selectType = document.getElementById('token-type');
 
-// -- Changer la forme du masque selon le type --
 function mettreAJourMasque() {
     const type    = selectType.value;
     const bordure = document.getElementById('token-bordure');
@@ -192,26 +281,19 @@ function mettreAJourMasque() {
 }
 
 selectType.addEventListener('change', mettreAJourMasque);
-
-// -- Couleur de bordure en temps réel (joueur uniquement) --
 document.getElementById('token-bordure').addEventListener('input', mettreAJourMasque);
 
-// -- Upload image du token --
 document.getElementById('token-image-input').addEventListener('change', e => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = ev => {
-        imgPreview.src     = ev.target.result;
+        imgPreview.src = ev.target.result;
         imgPreview.style.display = 'block';
-        imgOffsetX = 0;
-        imgOffsetY = 0;
-        imgZoom    = 1;
+        imgOffsetX = 0; imgOffsetY = 0; imgZoom = 1;
         sliderZoom.value = 100;
         appliquerTransform();
-
-        // Attendre que l'image soit chargée pour centrer
         imgPreview.onload = () => centrerImage();
     };
     reader.readAsDataURL(file);
@@ -220,21 +302,18 @@ document.getElementById('token-image-input').addEventListener('change', e => {
 function centrerImage() {
     const mW = masque.clientWidth;
     const mH = masque.clientHeight;
-    const iW = imgPreview.naturalWidth  * imgZoom;
-    const iH = imgPreview.naturalHeight * imgZoom;
-    imgOffsetX = (mW - iW) / 2;
-    imgOffsetY = (mH - iH) / 2;
+    imgOffsetX = (mW - imgPreview.naturalWidth  * imgZoom) / 2;
+    imgOffsetY = (mH - imgPreview.naturalHeight * imgZoom) / 2;
     appliquerTransform();
 }
 
 function appliquerTransform() {
-    imgPreview.style.width     = (imgPreview.naturalWidth  * imgZoom) + 'px';
-    imgPreview.style.height    = (imgPreview.naturalHeight * imgZoom) + 'px';
-    imgPreview.style.left      = imgOffsetX + 'px';
-    imgPreview.style.top       = imgOffsetY  + 'px';
+    imgPreview.style.width  = (imgPreview.naturalWidth  * imgZoom) + 'px';
+    imgPreview.style.height = (imgPreview.naturalHeight * imgZoom) + 'px';
+    imgPreview.style.left   = imgOffsetX + 'px';
+    imgPreview.style.top    = imgOffsetY + 'px';
 }
 
-// -- Drag de l'image dans le masque --
 masque.addEventListener('mousedown', e => {
     if (!imgPreview.src) return;
     isDragging = true;
@@ -252,12 +331,9 @@ window.addEventListener('mousemove', e => {
 
 window.addEventListener('mouseup', () => { isDragging = false; });
 
-// -- Zoom slider --
 sliderZoom.addEventListener('input', e => {
     const ancienZoom = imgZoom;
     imgZoom = parseInt(e.target.value) / 100;
-
-    // Calcul offset pour zoomer depuis le centre du masque
     const mW = masque.clientWidth;
     const mH = masque.clientHeight;
     const ratio = imgZoom / ancienZoom;
@@ -267,30 +343,27 @@ sliderZoom.addEventListener('input', e => {
 });
 
 // ---------------------------------------------
-//  Créer le Token (valider)
+//  Créer le Token
 // ---------------------------------------------
 document.getElementById('btn-creer-token').addEventListener('click', async () => {
-    const nom     = document.getElementById('token-nom').value.trim();
-    const type    = document.getElementById('token-type').value;
-    const bordure = document.getElementById('token-bordure').value;
-    const taille  = document.getElementById('token-taille').value;
+    const nom       = document.getElementById('token-nom').value.trim();
+    const type      = document.getElementById('token-type').value;
+    const bordure   = document.getElementById('token-bordure').value;
+    const taille    = document.getElementById('token-taille').value;
     const fileInput = document.getElementById('token-image-input');
 
-    if (!nom)              return alert('Donne un nom au jeton.');
+    if (!nom) return alert('Donne un nom au jeton.');
     if (!fileInput.files.length) return alert('Choisis une image.');
 
-    // Upload de l'image brute
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
     const uploadRes  = await fetch('/api/upload/token', { method: 'POST', body: formData });
     const uploadData = await uploadRes.json();
     if (!uploadData.success) return alert('Erreur upload image.');
 
-    // Créer la définition du token
     const tokenDef = {
         id:       `token_${Date.now()}`,
-        nom,
-        type,
+        nom, type,
         forme:    type === 'joueur' ? 'cercle' : 'carre',
         image:    uploadData.filename,
         offset_x: imgOffsetX,
@@ -300,16 +373,14 @@ document.getElementById('btn-creer-token').addEventListener('click', async () =>
         taille
     };
 
-    // Envoyer au serveur
     const res  = await fetch('/api/token_def', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(tokenDef)
+        body: JSON.stringify(tokenDef)
     });
     const data = await res.json();
 
     if (data.success) {
-        // Reset formulaire uniquement, afficherTokens() sera appelé par token_defs_updated
         document.getElementById('token-nom').value = '';
         fileInput.value = '';
         imgPreview.src  = '';
@@ -319,7 +390,7 @@ document.getElementById('btn-creer-token').addEventListener('click', async () =>
 });
 
 // ---------------------------------------------
-//  Afficher la liste des tokens créés
+//  Afficher tokens
 // ---------------------------------------------
 function afficherTokens() {
     const grille = document.getElementById('grille-tokens');
@@ -342,15 +413,13 @@ function afficherTokens() {
 }
 
 function dessinerMiniToken(t) {
-    const c   = document.getElementById(`preview-${t.id}`);
+    const c = document.getElementById(`preview-${t.id}`);
     if (!c) return;
     const ctx2 = c.getContext('2d');
     const img  = new Image();
     img.onload = () => {
         ctx2.clearRect(0, 0, 60, 60);
         ctx2.save();
-
-        // Masque forme
         ctx2.beginPath();
         if (t.forme === 'cercle') {
             ctx2.arc(30, 30, 28, 0, Math.PI * 2);
@@ -358,10 +427,14 @@ function dessinerMiniToken(t) {
             ctx2.roundRect(2, 2, 56, 56, 8);
         }
         ctx2.clip();
-        ctx2.drawImage(img, 0, 0, 60, 60);
+        const scale = 60 / 120;
+        const drawW = img.naturalWidth  * t.zoom * scale;
+        const drawH = img.naturalHeight * t.zoom * scale;
+        const drawX = t.offset_x * scale;
+        const drawY = t.offset_y * scale;
+        ctx2.drawImage(img, drawX, drawY, drawW, drawH);
         ctx2.restore();
 
-        // Bordure
         ctx2.strokeStyle = t.bordure;
         ctx2.lineWidth   = 3;
         ctx2.beginPath();
@@ -382,26 +455,30 @@ async function supprimerToken(id) {
 }
 
 // ---------------------------------------------
-//  WebSocket - écoute les mises à jour
+//  WebSocket
 // ---------------------------------------------
 socket.on('state_reloaded', data => {
-    tokenDefs    = data.token_defs || [];
-    grilleConfig = data.grille     || grilleConfig;
+    tokenDefs    = data.token_defs  || [];
+    grilleConfig = data.grille      || grilleConfig;
+    mapsDispos   = data.maps        || [];
+    mapConfigs   = data.map_configs || {};
 
-    // Sync sliders
-    document.getElementById('slider-nb-cases').value = grilleConfig.nb_cases;
-    document.getElementById('slider-offset-x').value = grilleConfig.offset_x;
-    document.getElementById('slider-offset-y').value = grilleConfig.offset_y;
-    document.getElementById('input-nb-cases').value   = grilleConfig.nb_cases;
-    document.getElementById('val-offset-x').textContent = grilleConfig.offset_x;
-    document.getElementById('val-offset-y').textContent = grilleConfig.offset_y;
-    document.getElementById('grille-visible').checked   = grilleConfig.visible;
-    document.getElementById('grille-couleur').value     = grilleConfig.couleur  || '#ffffff';
-    document.getElementById('slider-opacite').value     = grilleConfig.opacite  || 25;
-    document.getElementById('val-opacite').textContent  = grilleConfig.opacite  || 25;
+    syncSliders();
 
     if (data.map_active) chargerMapSurCanvas(data.map_active);
+    afficherListeMaps();
     afficherTokens();
+});
+
+socket.on('maps_updated', data => {
+    mapsDispos = data.maps        || [];
+    mapConfigs = data.map_configs || {};
+    afficherListeMaps();
+});
+
+socket.on('map_configs_updated', data => {
+    mapConfigs = data.map_configs || {};
+    afficherListeMaps();
 });
 
 socket.on('token_defs_updated', data => {
@@ -409,4 +486,10 @@ socket.on('token_defs_updated', data => {
     afficherTokens();
 });
 
-console.log('[Edition] Page Édition chargée');
+socket.on('grille_updated', data => {
+    grilleConfig = data;
+    syncSliders();
+    dessinerCanvas();
+});
+
+console.log('[Edition] Page Édition chargée ✅');

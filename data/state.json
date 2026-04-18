@@ -1,22 +1,20 @@
 {
-  "map_active": null,
+  "map_active": "clairval final.png",
   "fog_of_war": true,
   "grille": {
-    "visible": true,
-    "nb_cases": 1,
-    "offset_x": -64,
-    "offset_y": 0,
-    "couleur": "#ff0000",
-    "opacite": 100
+    "visible": false,
+    "nb_cases": 30.4,
+    "offset_x": 79,
+    "offset_y": 65,
+    "couleur": "#000000",
+    "opacite": 90,
+    "exploration": false
   },
   "tokens": [],
   "groupes": [],
   "maps": [
-    "carte.jpeg",
     "clairval final.png",
-    "clairval 3.png",
-    "combat dans la brume de Clairval.jpg",
-    "clairval1.png"
+    "combat dans la brume de Clairval.jpg"
   ],
   "token_defs": [
     {
@@ -80,5 +78,25 @@
       "taille": "S"
     }
   ],
-  "objets_interactifs": []
+  "objets_interactifs": [],
+  "map_configs": {
+    "combat dans la brume de Clairval.jpg": {
+      "visible": true,
+      "nb_cases": 30.4,
+      "offset_x": 79,
+      "offset_y": 65,
+      "couleur": "#000000",
+      "opacite": 90,
+      "exploration": true
+    },
+    "clairval final.png": {
+      "visible": false,
+      "nb_cases": 30.4,
+      "offset_x": 79,
+      "offset_y": 65,
+      "couleur": "#000000",
+      "opacite": 90,
+      "exploration": false
+    }
+  }
 }

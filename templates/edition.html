@@ -8,9 +8,6 @@
 {% block contenu %}
 <div id="app-edition">
 
-    <!-- ═══════════════════════════════════════ -->
-    <!--  ONGLETS ÉDITION                       -->
-    <!-- ═══════════════════════════════════════ -->
     <nav id="onglets-edition">
         <button class="onglet actif" data-onglet="maps">🗺️ Maps</button>
         <button class="onglet" data-onglet="tokens">🧙 Jetons</button>
@@ -21,15 +18,25 @@
     <!-- ═══════════════════════════════════════ -->
     <div id="panneau-maps" class="panneau-edition actif">
 
-        <!-- Colonne gauche : outils -->
         <aside id="outils-maps">
 
+            <!-- Upload -->
             <section class="section-edition">
                 <h2>Upload map</h2>
                 <input type="file" id="input-upload-map" accept=".png,.jpg,.jpeg">
                 <button id="btn-upload-map">📤 Uploader</button>
             </section>
 
+            <!-- Mes Maps -->
+            <section class="section-edition">
+                <h2>Mes Maps</h2>
+                <div id="liste-maps">
+                    <!-- Rempli dynamiquement -->
+                </div>
+                <button id="btn-enregistrer-map">💾 Enregistrer config grille</button>
+            </section>
+
+            <!-- Grille -->
             <section class="section-edition">
                 <h2>Grille</h2>
 
@@ -37,8 +44,8 @@
                 <input type="checkbox" id="grille-visible" checked>
 
                 <label>Nombre de cases</label>
-                <input type="number" id="input-nb-cases" min="1" max="500" step="0.1" value="20" style="width:100%;padding:6px 10px;background:var(--bg-input);border:1px solid var(--bordure);border-radius:var(--rayon);color:var(--texte);font-size:13px;">
-                <input type="range" id="slider-nb-cases" min="5" max="100" step="0.1" value="20">
+                <input type="number" id="input-nb-cases" min="1" max="500" step="0.1" value="20">
+                <input type="range" id="slider-nb-cases" min="5" max="1000" step="0.1" value="20">
 
                 <label>Décalage X : <span id="val-offset-x">0</span>px</label>
                 <input type="range" id="slider-offset-x" min="-100" max="100" value="0">
@@ -53,9 +60,16 @@
                 <input type="range" id="slider-opacite" min="5" max="100" value="25">
             </section>
 
+            <!-- Autres options -->
+            <section class="section-edition">
+                <h2>Autre</h2>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                    <input type="checkbox" id="map-exploration">
+                    Mode exploration (Fog of War)
+                </label>
+            </section>
         </aside>
 
-        <!-- Colonne droite : aperçu canvas -->
         <main id="apercu-map">
             <canvas id="canvas-edition"></canvas>
         </main>
@@ -67,17 +81,12 @@
     <!-- ═══════════════════════════════════════ -->
     <div id="panneau-tokens" class="panneau-edition">
 
-        <!-- Colonne gauche : liste des jetons créés -->
         <aside id="liste-tokens-crees">
             <h2>Jetons créés</h2>
-            <div id="grille-tokens">
-                <!-- Rempli dynamiquement par edition.js -->
-            </div>
+            <div id="grille-tokens"></div>
         </aside>
 
-        <!-- Colonne droite : créer un jeton -->
         <main id="outils-tokens">
-
             <section class="section-edition">
                 <h2>Créer un jeton</h2>
 
@@ -106,7 +115,6 @@
 
                 <hr>
 
-                <!-- Aperçu du recadrage (comme Instagram) -->
                 <div id="token-recadrage-wrapper">
                     <div id="token-masque">
                         <img id="token-image-preview" src="" alt="" draggable="false">
@@ -117,7 +125,6 @@
 
                 <button id="btn-creer-token">✅ Créer le jeton</button>
             </section>
-
         </main>
 
     </div>
@@ -127,4 +134,4 @@
 
 {% block script %}
 <script src="/static/js/edition.js"></script>
-{% endblock %} 
+{% endblock %}
