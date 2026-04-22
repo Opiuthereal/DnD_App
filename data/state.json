@@ -1,20 +1,23 @@
 {
-  "map_active": "clairval final.png",
+  "map_active": "Ruines de Clairval.png",
   "fog_of_war": true,
   "grille": {
-    "visible": false,
-    "nb_cases": 284.2,
-    "offset_x": 79,
-    "offset_y": 65,
-    "couleur": "#000000",
+    "visible": true,
+    "nb_cases": 73.5,
+    "offset_x": 45,
+    "offset_y": 68,
+    "couleur": "#616161",
     "opacite": 90,
-    "exploration": false
+    "exploration": true
   },
   "tokens": [],
   "groupes": [],
   "maps": [
     "clairval final.png",
-    "combat dans la brume de Clairval.jpg"
+    "combat dans la brume de Clairval.jpg",
+    "Ruines de Clairval.png",
+    "Ruines de Clairval sans grille.png",
+    "clairval1.png"
   ],
   "token_defs": [
     {
@@ -88,6 +91,18 @@
       "zoom": 0.28,
       "bordure": "#e94560",
       "taille": "L"
+    },
+    {
+      "id": "token_1776885980988",
+      "nom": "monstre1",
+      "type": "ennemi",
+      "forme": "carre",
+      "image": "chat corrompu.png",
+      "offset_x": -71.38428571428562,
+      "offset_y": -52.377142857142815,
+      "zoom": 0.41,
+      "bordure": "#e94560",
+      "taille": "S"
     }
   ],
   "objets_interactifs": [],
@@ -109,47 +124,27 @@
       "couleur": "#000000",
       "opacite": 90,
       "exploration": false
+    },
+    "Ruines de Clairval.png": {
+      "visible": true,
+      "nb_cases": 73.5,
+      "offset_x": 45,
+      "offset_y": 68,
+      "couleur": "#616161",
+      "opacite": 90,
+      "exploration": true
+    },
+    "clairval1.png": {
+      "visible": true,
+      "nb_cases": 20.2,
+      "offset_x": 33,
+      "offset_y": -59,
+      "couleur": "#479394",
+      "opacite": 100,
+      "exploration": false
     }
   },
   "presets": [
-    {
-      "id": "preset_1776530954038",
-      "nom": "préset rue test",
-      "map": "combat dans la brume de Clairval.jpg",
-      "grille": {
-        "visible": true,
-        "nb_cases": 30.4,
-        "offset_x": 79,
-        "offset_y": 65,
-        "couleur": "#000000",
-        "opacite": 90,
-        "exploration": true
-      },
-      "jetons": [
-        {
-          "defId": "token_1776530886705",
-          "x": 473.73684210526324,
-          "y": 163.6842105263158,
-          "col": 14,
-          "ligne": 4
-        },
-        {
-          "defId": "token_1776530886705",
-          "x": 309.2631578947369,
-          "y": 295.2631578947369,
-          "col": 9,
-          "ligne": 8
-        },
-        {
-          "defId": "token_1776530886705",
-          "x": 309.2631578947369,
-          "y": 97.89473684210526,
-          "col": 9,
-          "ligne": 2
-        }
-      ],
-      "formes": []
-    },
     {
       "id": "preset_1776531148640",
       "nom": "Préset shrak",
@@ -184,6 +179,273 @@
           "y": 393.94736842105266,
           "col": 11,
           "ligne": 11
+        }
+      ],
+      "formes": []
+    },
+    {
+      "id": "preset_1776787469892",
+      "nom": "Ruines de Clairval",
+      "map": "Ruines de Clairval.png",
+      "grille": {
+        "visible": true,
+        "nb_cases": 73.5,
+        "offset_x": 45,
+        "offset_y": 68,
+        "couleur": "#616161",
+        "opacite": 90,
+        "exploration": true
+      },
+      "jetons": [],
+      "formes": [
+        {
+          "id": "forme_1776787143656",
+          "type": "carre",
+          "x": 563,
+          "y": 29,
+          "w": 13,
+          "h": 367
+        },
+        {
+          "id": "forme_1776787150789",
+          "type": "carre",
+          "x": 303,
+          "y": 26,
+          "w": 274,
+          "h": 13
+        },
+        {
+          "id": "forme_1776787164110",
+          "type": "carre",
+          "x": 302,
+          "y": 27,
+          "w": 15,
+          "h": 362
+        },
+        {
+          "id": "forme_1776787171165",
+          "type": "carre",
+          "x": 303,
+          "y": 381,
+          "w": 107,
+          "h": 11
+        },
+        {
+          "id": "forme_1776787178190",
+          "type": "carre",
+          "x": 399,
+          "y": 380,
+          "w": 14,
+          "h": 162
+        },
+        {
+          "id": "forme_1776787184638",
+          "type": "carre",
+          "x": 399,
+          "y": 531,
+          "w": 80,
+          "h": 14
+        },
+        {
+          "id": "forme_1776787193803",
+          "type": "carre",
+          "x": 467,
+          "y": 381,
+          "w": 109,
+          "h": 14
+        },
+        {
+          "id": "forme_1776787204108",
+          "type": "carre",
+          "x": 466,
+          "y": 382,
+          "w": 14,
+          "h": 161
+        },
+        {
+          "id": "forme_1776787215534",
+          "type": "carre",
+          "x": 617,
+          "y": 353,
+          "w": 79,
+          "h": 14
+        },
+        {
+          "id": "forme_1776787224308",
+          "type": "carre",
+          "x": 684,
+          "y": 353,
+          "w": 14,
+          "h": 178
+        },
+        {
+          "id": "forme_1776787233877",
+          "type": "carre",
+          "x": 618,
+          "y": 353,
+          "w": 12,
+          "h": 178
+        },
+        {
+          "id": "forme_1776787244672",
+          "type": "carre",
+          "x": 617,
+          "y": 517,
+          "w": 82,
+          "h": 13
+        },
+        {
+          "id": "forme_1776787305943",
+          "type": "porte",
+          "x1": 414,
+          "y1": 385,
+          "x2": 464,
+          "y2": 386,
+          "ouverte": false
+        },
+        {
+          "id": "forme_1776787340168",
+          "type": "cercle",
+          "cx": 534,
+          "cy": 354,
+          "rx": 6,
+          "ry": 6
+        },
+        {
+          "id": "forme_1776787349532",
+          "type": "cercle",
+          "cx": 534,
+          "cy": 299,
+          "rx": 7,
+          "ry": 7
+        },
+        {
+          "id": "forme_1776787358979",
+          "type": "cercle",
+          "cx": 343,
+          "cy": 353.5,
+          "rx": 7,
+          "ry": 6.5
+        },
+        {
+          "id": "forme_1776787367111",
+          "type": "cercle",
+          "cx": 342.5,
+          "cy": 299,
+          "rx": 7.5,
+          "ry": 7
+        },
+        {
+          "id": "forme_1776787371106",
+          "type": "cercle",
+          "cx": 343,
+          "cy": 244.5,
+          "rx": 7,
+          "ry": 6.5
+        },
+        {
+          "id": "forme_1776787376923",
+          "type": "cercle",
+          "cx": 534,
+          "cy": 245,
+          "rx": 7,
+          "ry": 6
+        },
+        {
+          "id": "forme_1776787397970",
+          "type": "cercle",
+          "cx": 344,
+          "cy": 68,
+          "rx": 6,
+          "ry": 6
+        },
+        {
+          "id": "forme_1776787402900",
+          "type": "cercle",
+          "cx": 343,
+          "cy": 122.5,
+          "rx": 7,
+          "ry": 6.5
+        },
+        {
+          "id": "forme_1776787408352",
+          "type": "cercle",
+          "cx": 342.5,
+          "cy": 176.5,
+          "rx": 6.5,
+          "ry": 6.5
+        },
+        {
+          "id": "forme_1776787414546",
+          "type": "cercle",
+          "cx": 533.5,
+          "cy": 176.5,
+          "rx": 7.5,
+          "ry": 6.5
+        },
+        {
+          "id": "forme_1776787419141",
+          "type": "cercle",
+          "cx": 533.5,
+          "cy": 121.5,
+          "rx": 6.5,
+          "ry": 6.5
+        },
+        {
+          "id": "forme_1776787426689",
+          "type": "cercle",
+          "cx": 534,
+          "cy": 67.5,
+          "rx": 7,
+          "ry": 6.5
+        },
+        {
+          "id": "forme_1776787444095",
+          "type": "carre",
+          "x": 418,
+          "y": 54,
+          "w": 41,
+          "h": 20
+        }
+      ]
+    },
+    {
+      "id": "preset_1776877856141",
+      "nom": "chat caché",
+      "map": "combat dans la brume de Clairval.jpg",
+      "grille": {
+        "visible": true,
+        "nb_cases": 30.4,
+        "offset_x": 79,
+        "offset_y": 65,
+        "couleur": "#000000",
+        "opacite": 90,
+        "exploration": true
+      },
+      "jetons": [
+        {
+          "defId": "token_1776285103970",
+          "x": 506.6315789473685,
+          "y": 229.47368421052636,
+          "col": 15,
+          "ligne": 6,
+          "cache": false
+        },
+        {
+          "defId": "token_1776285103970",
+          "x": 473.73684210526324,
+          "y": 196.57894736842107,
+          "col": 14,
+          "ligne": 5,
+          "cache": false
+        },
+        {
+          "defId": "token_1776530886705",
+          "x": 375.0526315789474,
+          "y": 393.94736842105266,
+          "col": 11,
+          "ligne": 11,
+          "cache": true
         }
       ],
       "formes": []

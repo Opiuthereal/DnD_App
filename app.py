@@ -305,6 +305,18 @@ def on_load_groupe(data):
     if groupe:
         emit('groupe_loaded', groupe, broadcast=True)
 
+
+@socketio.on('sync_jetons_mj')
+def on_sync_jetons_mj(data):
+    # data = { jetons, formes, grille, map, fog_actif }
+    # Broadcast vers les clients Joueur
+    emit('jetons_mj_updated', data, broadcast=True)
+
+@socketio.on('mj_view_updated')
+def on_mj_view_updated(data):
+    # data = { zoom, offsetX, offsetY } — pour usage futur
+    pass
+
 @socketio.on('reveal_objet')
 def on_reveal_objet(data):
     emit('objet_revealed', data, broadcast=True)

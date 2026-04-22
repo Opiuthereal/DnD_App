@@ -156,6 +156,7 @@ function dessinerJetonsPreset() {
         if (!img || !img.complete) return;
 
         ctxP.save();
+        ctxP.globalAlpha = inst.cache ? 0.5 : 1.0;
 
         // Masque
         ctxP.beginPath();
@@ -412,7 +413,8 @@ function placerJeton(x, y) {
         def:   jetonAPoser,
         imgObj,
         x: posX, y: posY,
-        col, ligne
+        col, ligne,
+        cache: false
     };
 
     imgObj.onload = () => redessinerPreset();
@@ -433,6 +435,11 @@ document.getElementById('preset-btn-vider-1-jeton').addEventListener('click', ()
     toggleOutil('vider-1-jeton', document.getElementById('preset-btn-vider-1-jeton'));
 });
 
+// Cacher/montrer 1 jeton (mode toggle)
+document.getElementById('preset-btn-cacher-jeton').addEventListener('click', () => {
+    toggleOutil('cacher-jeton', document.getElementById('preset-btn-cacher-jeton'));
+});
+
 // ─────────────────────────────────────────────
 //  Outils Formes
 // ─────────────────────────────────────────────
@@ -442,7 +449,7 @@ function toggleOutil(nom, btn) {
         presetOutil = null;
         jetonAPoser = null;
         cvPreset.style.cursor = 'default';
-        document.querySelectorAll('.preset-btn-forme, #preset-btn-deplacer, #preset-btn-suppr-forme, #preset-btn-vider-1-jeton')
+        document.querySelectorAll('.preset-btn-forme, #preset-btn-deplacer, #preset-btn-suppr-forme, #preset-btn-vider-1-jeton, #preset-btn-cacher-jeton')
             .forEach(b => b.classList.remove('actif'));
     } else {
         desactiverOutils();
@@ -458,7 +465,7 @@ function desactiverOutils() {
     presetPorteStep = 0;
     presetPorteStart = null;
     cvPreset.style.cursor = 'default';
-    document.querySelectorAll('.preset-btn-forme, #preset-btn-deplacer, #preset-btn-suppr-forme, #preset-btn-vider-1-jeton')
+    document.querySelectorAll('.preset-btn-forme, #preset-btn-deplacer, #preset-btn-suppr-forme, #preset-btn-vider-1-jeton, #preset-btn-cacher-jeton')
         .forEach(b => b.classList.remove('actif'));
 }
 
@@ -522,6 +529,17 @@ cvPreset.addEventListener('mousedown', e => {
         return;
     }
 
+    // Cacher/montrer 1 jeton
+    if (presetOutil === 'cacher-jeton') {
+        const inst = presetJetons.find(inst => jetonSousPoint(inst, x, y));
+        if (inst) {
+            inst.cache = !inst.cache;
+            redessinerPreset();
+        }
+        desactiverOutils();
+        return;
+    }
+
     // Supprimer forme(s)
     if (presetOutil === 'suppr-forme') {
         presetFormes = presetFormes.filter(f => !formeSousPoint(f, x, y));
@@ -533,7 +551,7 @@ cvPreset.addEventListener('mousedown', e => {
     // Porte — 2 clics
     if (presetOutil === 'porte') {
         if (presetPorteStep === 0) {
-            // Vérifier pas de superposition avec autre porte
+            // Vérifier pas de superposition avec autre porte ou mur
             const conflit = presetFormes.some(f =>
                 (f.type === 'porte' && distPoint(f.x1, f.y1, x, y) < 10) ||
                 (f.type === 'carre' && x >= f.x && x <= f.x + f.w && y >= f.y && y <= f.y + f.h) ||
@@ -633,7 +651,6 @@ cvPreset.addEventListener('mousemove', e => {
                     inst.col  = snap.col;
                     inst.ligne= snap.ligne;
                 }
-
             } else {
                 inst.x = newX;
                 inst.y = newY;
@@ -734,7 +751,8 @@ document.getElementById('preset-btn-enregistrer').addEventListener('click', asyn
             x:      inst.x,
             y:      inst.y,
             col:    inst.col,
-            ligne:  inst.ligne
+            ligne:  inst.ligne,
+            cache:  inst.cache || false
         })),
         formes:  presetFormes.map(f => ({ ...f }))
     };
@@ -796,7 +814,7 @@ function chargerPreset(p) {
         const imgObj = new Image();
         imgObj.src   = `/uploads/tokens/${def.image}`;
         imgObj.onload = () => redessinerPreset();
-        presetJetons.push({ id: `inst_${Date.now()}_${Math.random().toString(36).slice(2)}`, def, imgObj, x: inst.x, y: inst.y, col: inst.col, ligne: inst.ligne });
+        presetJetons.push({ id: `inst_${Date.now()}_${Math.random().toString(36).slice(2)}`, def, imgObj, x: inst.x, y: inst.y, col: inst.col, ligne: inst.ligne, cache: inst.cache || false });
     });
 }
 
